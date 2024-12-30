@@ -1,0 +1,26 @@
+{
+  "canisters": {
+    "LandLease_backend": {
+      "main": "src/LandLease_backend/main.mo",
+      "type": "motoko"
+    },
+    "LandLease_frontend": {
+      "dependencies": [
+        "LandLease_backend"
+      ],
+      "source": [
+        "src/LandLease_frontend/dist"
+      ],
+      "type": "assets",
+      "workspace": "LandLease_frontend"
+    }
+  },
+  "defaults": {
+    "build": {
+      "args": "",
+      "packtool": ""
+    }
+  },
+  "output_env_file": ".env",
+  "version": 1
+}

@@ -1,0 +1,118 @@
+.post-land {
+    max-width: 800px;
+    margin: 1rem auto;
+    padding: 1rem;
+  }
+  
+  .post-land-form {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  }
+  
+  .post-land h2 {
+    color: #2c3e50;
+    text-align: center;
+    margin-bottom: 1.5rem;
+    font-size: 1.5rem;
+  }
+  
+  .form-group {
+    margin-bottom: 1rem;
+  }
+  
+  .form-row {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  
+  label {
+    display: block;
+    margin-bottom: 0.4rem;
+    color: #34495e;
+    font-weight: 500;
+    font-size: 0.9rem;
+  }
+  
+  input, textarea {
+    width: 100%;
+    padding: 0.7rem;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 0.9rem;
+  }
+  
+  textarea {
+    height: 100px;
+    resize: vertical;
+  }
+  
+  .submit-btn {
+    background: #2ecc71;
+    color: white;
+    border: none;
+    padding: 0.8rem;
+    border-radius: 8px;
+    cursor: pointer;
+    width: 100%;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    margin-top: 1rem;
+  }
+  
+  .submit-btn:hover {
+    background: #27ae60;
+    transform: translateY(-2px);
+  }
+  
+  /* Tablet */
+  @media (min-width: 768px) {
+    .post-land {
+      margin: 2rem auto;
+      padding: 2rem;
+    }
+  
+    .post-land-form {
+      padding: 2rem;
+    }
+  
+    .post-land h2 {
+      font-size: 2rem;
+      margin-bottom: 2rem;
+    }
+  
+    .form-row {
+      grid-template-columns: 1fr 1fr;
+    }
+  
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+  
+    label {
+      font-size: 1rem;
+    }
+  
+    input, textarea {
+      font-size: 1rem;
+      padding: 0.8rem;
+    }
+  
+    textarea {
+      height: 120px;
+    }
+  
+    .submit-btn {
+      font-size: 1.1rem;
+      padding: 1rem;
+    }
+  }
+  
+  /* Laptop */
+  @media (min-width: 1024px) {
+    .post-land-form {
+      padding: 2.5rem;
+    }
+  }
