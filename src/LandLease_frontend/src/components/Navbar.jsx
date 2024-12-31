@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { FaHome, FaSearch, FaPlus, FaUser, FaBars } from 'react-icons/fa';
 import '../styles/Navbar.css';
+import Connect from '../Connect';
 
 const Navbar = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -27,6 +28,7 @@ const Navbar = () => {
         <Link to="/search" className="nav-link"><FaSearch /> Search</Link>
         <Link to="/post" className="nav-link"><FaPlus /> Post Land</Link>
         <Link to="/profile" className="nav-link"><FaUser /> Profile</Link>
+        <Connect />
       </div>
 
       <div className={`mobile-menu ${isMobileMenuOpen ? 'open' : ''}`}>
@@ -34,6 +36,7 @@ const Navbar = () => {
         <Link to="/search" className="nav-link"><FaSearch /> Search</Link>
         <Link to="/post" className="nav-link"><FaPlus /> Post Land</Link>
         <Link to="/profile" className="nav-link"><FaUser /> Profile</Link>
+        <Connect />
       </div>
     </nav>
   );

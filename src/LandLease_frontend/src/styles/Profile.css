@@ -176,7 +176,7 @@
   }
   
   .listing-actions button:last-child {
-    background: #e74c3c;
+    background: rgb(28, 185, 28);
     color: white;
   }
   
@@ -212,3 +212,4 @@
       grid-template-columns: repeat(3, 1fr);
     }
   }
+  
