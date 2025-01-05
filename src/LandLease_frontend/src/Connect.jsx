@@ -39,10 +39,10 @@ export default function Connect() {
             <button
                id="ConnectBtn"
                onClick={handleConnect}
-               style={{
-                  cursor: "pointer",
-                  marginTop: "32px",
-               }}
+               // style={{
+               //    cursor: "pointer",
+               //    marginTop: "32px",
+               // }}
             >
                Connect
             </button>

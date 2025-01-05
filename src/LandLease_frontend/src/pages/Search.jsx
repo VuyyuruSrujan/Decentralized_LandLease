@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { FaSearch, FaFilter } from 'react-icons/fa';
 import LandCard from '../components/LandCard';
 import '../styles/Search.css';
+import { LandLease_backend } from 'declarations/LandLease_backend';
 
 const Search = () => {
   const [filters, setFilters] = useState({
@@ -14,38 +15,51 @@ const Search = () => {
     leaseTerm: ''
   });
 
-  const dummyLands = [
-    {
-      id: 1,
-      title: "Fertile Agricultural Land",
-      location: "Karnataka, India",
-      area: 5,
-      leaseTerm: 10,
-      price: 50000,
-      image: "https://images.unsplash.com/photo-1500382017468-9049fed747ef",
-      description: "Fertile agricultural land with water source and good soil quality."
-    },
-    {
-      id: 2,
-      title: "Commercial Plot",
-      location: "Maharashtra, India",
-      area: 2,
-      leaseTerm: 15,
-      price: 75000,
-      image: "https://images.unsplash.com/photo-1500382017468-9049fed747ef",
-      description: "Prime location commercial plot suitable for business."
-    },
-    {
-      id: 3,
-      title: "Agricultural Land with Irrigation",
-      location: "Punjab, India",
-      area: 8,
-      leaseTerm: 12,
-      price: 65000,
-      image: "https://images.unsplash.com/photo-1500382017468-9049fed747ef",
-      description: "Well-irrigated agricultural land perfect for farming."
-    }
-  ];
+  const [Available_Lands , setAvailable_Lands] = useState([]);
+
+
+  useEffect(() =>{
+    getAllPosts();
+  },[])
+
+  async function getAllPosts(){
+    var answer = await LandLease_backend.get_all_posts();
+    console.log("all posts",answer);
+    setAvailable_Lands(answer);
+  };
+
+  // const dummyLands = [
+  //   {
+  //     id: 1,
+  //     title: "Fertile Agricultural Land",
+  //     location: "Karnataka, India",
+  //     area: 5,
+  //     leaseTerm: 10,
+  //     price: 50000,
+  //     image: "https://images.unsplash.com/photo-1500382017468-9049fed747ef",
+  //     description: "Fertile agricultural land with water source and good soil quality."
+  //   },
+  //   {
+  //     id: 2,
+  //     title: "Commercial Plot",
+  //     location: "Maharashtra, India",
+  //     area: 2,
+  //     leaseTerm: 15,
+  //     price: 75000,
+  //     image: "land.jpeg",
+  //     description: "Prime location commercial plot suitable for business."
+  //   },
+  //   {
+  //     id: 3,
+  //     title: "Agricultural Land with Irrigation",
+  //     location: "Punjab, India",
+  //     area: 8,
+  //     leaseTerm: 12,
+  //     price: 65000,
+  //     image: "land.jpeg",
+  //     description: "Well-irrigated agricultural land perfect for farming."
+  //   }
+  // ];
 
   return (
     <motion.div 
@@ -141,7 +155,7 @@ const Search = () => {
             </select>
           </div>
           <div className="results-grid">
-            {dummyLands.map(land => (
+            {Available_Lands.map(land => (
               <LandCard key={land.id} land={land} />
             ))}
           </div>

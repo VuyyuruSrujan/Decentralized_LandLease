@@ -11,7 +11,7 @@ const Navbar = () => {
     <nav className="navbar">
       <div className="nav-brand">
         <Link to="/">
-          <img src="https://img.icons8.com/color/48/000000/land-sales.png" alt="LandLease" />
+          <img src="land-sales.png" alt="LandLease" />
           <span>LandLease</span>
         </Link>
       </div>

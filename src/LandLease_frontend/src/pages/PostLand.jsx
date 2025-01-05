@@ -8,7 +8,7 @@ import { useNavigate } from 'react-router-dom';
 
 const PostLand = () => {
     const navigate = useNavigate();
-  const [formData, setFormData] = useState({ title: '', location: '', area: '', leaseTerm: '', price: '', description: '',});
+  const [formData, setFormData] = useState({ title: '', location: '', area: '', leaseTerm: '', price: '', description: '',postid:Number('')});
   const [isReg , setisReg] = useState(false);
 
   useEffect(() =>{
@@ -38,7 +38,8 @@ const PostLand = () => {
                 area:BigInt(formData.area),
                 lease_years:BigInt(formData.leaseTerm),
                 price_per_year:BigInt(formData.price),
-                description:formData.description
+                description:formData.description,
+                postid: await LandLease_backend.get_posts_number(),
               };
               console.log("POST",Post);
               try {
@@ -98,6 +99,7 @@ const PostLand = () => {
             <input 
               type="number" 
               value={formData.area}
+              onWheel={(e) => e.target.blur()}
               onChange={(e) => setFormData({...formData, area: e.target.value})}
               required
             />
@@ -107,6 +109,7 @@ const PostLand = () => {
             <input 
               type="number" 
               value={formData.leaseTerm}
+              onWheel={(e) => e.target.blur()}
               onChange={(e) => setFormData({...formData, leaseTerm: e.target.value})}
               required
             />
@@ -118,6 +121,7 @@ const PostLand = () => {
             type="number" 
             value={formData.price}
             onChange={(e) => setFormData({...formData, price: e.target.value})}
+            onWheel={(e) => e.target.blur()}
             required
           />
         </div>

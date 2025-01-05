@@ -2,16 +2,16 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import LandCard from '../components/LandCard';
 import '../styles/Home.css';
-
-const dummyLands = [
+import Navbar from '../components/Navbar';
+const dummyLandss = [
   {
     id: 1,
     title: "Fertile Agricultural Land",
     location: "Karnataka, India",
     area: 5,
-    leaseTerm: 10,
+    leaseTerm: 15,
     price: 50000,
-    image: "https://images.unsplash.com/photo-1500382017468-9049fed747ef",
+    image: "./land.jpeg",
     description: "Fertile agricultural land with water source and good soil quality."
   },
   {
@@ -19,9 +19,9 @@ const dummyLands = [
     title: "Commercial Plot",
     location: "Maharashtra, India",
     area: 2,
-    leaseTerm: 15,
-    price: 75000,
-    image: "https://images.unsplash.com/photo-1500382017468-9049fed747ef",
+    lease_years: 15,
+    price_per_year: 75000,
+    image: "./land.jpeg",
     description: "Prime location commercial plot suitable for business."
   }
 ];
@@ -42,7 +42,7 @@ const Home = () => {
       <section className="featured-lands">
         <h2>Featured Properties</h2>
         <div className="land-grid">
-          {dummyLands.map(land => (
+          {dummyLandss.map(land => (
             <LandCard key={land.id} land={land} />
           ))}
         </div>

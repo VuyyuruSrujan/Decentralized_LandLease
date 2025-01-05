@@ -7,27 +7,69 @@ import { Principal } from '@dfinity/principal';
 import { useNavigate } from 'react-router-dom';
 
 const Profile = () => {
-    var navigate = useNavigate();
+  var navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('listings');
   const [userDetails , setuserDetails] = useState([])
   const [userListings , setuserListings] = useState([]);
+  const[saved_data , setsaved_data] = useState([]);
+  const [landDetails, setLandDetails] = useState([]);
 
   useEffect(() =>{
     GetUserDetails();
     Get_My_Posts();
-  },[])
+    saved_ids();
+    saved_Lands();
+    console.log("saved is's from saved data const:",saved_data);
+    console.log("land details finally:",landDetails);
+  },[landDetails])
+
+  async function saved_Lands() {
+    // Ensure `saved_data` is fully updated before using it
+    if (saved_data.length === 0) {
+      console.log("No saved data to process yet.");
+      return;
+    }
+
+    try {
+      const lands = await Promise.all(
+        saved_data.map(async (id) => {
+          const land = await LandLease_backend.get_posts_by_id(id);
+          // console.log("land:",land); // Return the result for each id
+        })
+      );
+      setLandDetails(lands); // Store all fetched data in state
+      console.log("Fetched land details:", lands);
+    } catch (error) {
+      console.error("Error fetching land details:", error);
+    };
+  };
+
+  async function saved_ids() {
+    try {
+      const principalId = localStorage.getItem("uniqueid");
+      const ids = await LandLease_backend.getAllIds(Principal.fromText(principalId));
+      console.log("Saved data:", ids);
+
+      // Extract post IDs
+      const postIds = ids.map((item) => item.post_id);
+      console.log("Saved IDs:", postIds);
+
+      // Update the state
+      setsaved_data((prevData) => [...prevData, ...postIds]);
+
+      // Trigger fetching of land details after IDs are updated
+      setTimeout(saved_Lands, 0); // Ensures saved_data has been updated
+    } catch (error) {
+      console.error("Error fetching saved IDs:", error);
+    }
+  }
 
   async function Get_My_Posts() {
     const principalId = localStorage.getItem("uniqueid");
     try {
         const answer = await LandLease_backend.Get_My_All_Post(Principal.fromText(principalId));
         console.log("answer:get my posts", answer);
-        
-        if (answer.length === 0) {
-            setuserListings(["You haven't posted anything"]);
-        } else {
-            setuserListings(answer);
-        }
+        setuserListings(answer);
     } catch (error) {
         console.error("Error fetching posts:", error);
     }
@@ -49,71 +91,103 @@ const Profile = () => {
     }
   };
 
-  async function SubmitUserReg(){
+  // async function SubmitUserReg(){
+  //   event.preventDefault();
+  //   var principal = localStorage.getItem("uniqueid");
+  //   if(principal!= null || principal!= ""){
+  //       var Name = document.getElementById('usrname').value;
+  //       var phno = BigInt(document.getElementById("userphno").value);
+  //       var mail = document.getElementById("email").value;
+  //       var loc = document.getElementById("usrLocation").value;
+  //       var Age = BigInt(document.getElementById("usrAge").value);
+  //       var UserRegister = {
+  //           prin:(Principal.fromText(principal)),
+  //           Name:Name,
+  //           PhoneNumber:phno,
+  //           Email:mail,
+  //           Location:loc,
+  //           Age:Age,
+  //       };
+  //       console.log("UserRegister",UserRegister);
+  //       var result = await LandLease_backend.RegisterUser(UserRegister);
+  //       console.log(result);
+  //       if(result == "OK"){
+  //           console.log("successfully registered");
+  //           alert("successfully registered");
+  //           navigate('/');
+  //       }
+  //   }else if(principal == null || principal == " "){
+  //       console.log("connect to internet identity")
+  //       alert("connect to internett identity");
+  //   };
+  // };
+
+  async function SubmitUserReg() {
     event.preventDefault();
     var principal = localStorage.getItem("uniqueid");
-    if(principal!=null || principal!=""){
-        var Name = document.getElementById('usrname').value;
-        var phno = BigInt(document.getElementById("userphno").value);
-        var mail = document.getElementById("email").value;
-        var loc = document.getElementById("usrLocation").value;
-        var Age = BigInt(document.getElementById("usrAge").value);
-        var UserRegister = {
-            prin:(Principal.fromText(principal)),
-            Name:Name,
-            PhoneNumber:phno,
-            Email:mail,
-            Location:loc,
-            Age:Age,
-        };
-        console.log("UserRegister",UserRegister);
-        var result = await LandLease_backend.RegisterUser(UserRegister);
-        console.log(result);
-        if(result == "OK"){
-            console.log("successfully registered");
-            alert("successfully registered");
-            navigate('/');
+    if (principal !== null && principal !== "") {
+        try {
+            var Name = document.getElementById('usrname').value;
+            var phno = BigInt(document.getElementById("userphno").value);
+            var mail = document.getElementById("email").value;
+            var loc = document.getElementById("usrLocation").value;
+            var Age = BigInt(document.getElementById("usrAge").value);
+            var UserRegister = {
+                prin: Principal.fromText(principal),
+                Name: Name,
+                PhoneNumber: phno,
+                Email: mail,
+                Location: loc,
+                Age: Age,
+            };
+            console.log("UserRegister", UserRegister);
+            var result = await LandLease_backend.RegisterUser(UserRegister);
+            console.log(result);
+            if (result === "OK") {
+                console.log("Successfully registered");
+                alert("Successfully registered");
+                navigate('/');
+            }
+        } catch (error) {
+            console.error("Error during registration:", error);
+            alert("Registration failed. Please try again.");
         }
-    }else{
-        console.log("connect to internet identity")
-        alert("connect to internett identity");
-    };
-  };
+    } else {
+        console.log("Connect to Internet Identity");
+        alert("Connect to Internet Identity");
+    }
+}
+
 
   function PostingFun(){
     navigate('/post')
   }
-  
-  
-//   const userListings = [
-//     {
-//       id: 1,
-//       title: "Agricultural Land",
-//       location: "Karnataka",
-//       status: "active",
-//       views: 245,
-//       inquiries: 12
-//     },
-//     {
-//       id: 2,
-//       title: "Commercial Plot",
-//       location: "Maharashtra",
-//       status: "leased",
-//       views: 189,
-//       inquiries: 8
-//     }
-//   ];
 
-//   const leaseHistory = [
-//     {
-//       id: 1,
-//       landTitle: "Farm Land",
-//       owner: "John Doe",
-//       startDate: "2023-01-15",
-//       endDate: "2025-01-15",
-//       status: "active"
-//     }
-//   ];
+  async function SaveLand(post_id) {
+    event.preventDefault();
+    try {
+      console.log("passed post id",BigInt(post_id));
+        var principal = localStorage.getItem("uniqueid");
+        var Post_ids = {
+            prin: Principal.fromText(principal),
+            post_id: BigInt(post_id), // Use the passed post_id
+        };
+        console.log("Post_id's, before pushing", Post_ids);
+        if (principal != null && principal !== "") {
+            var answer = await LandLease_backend.saved_Posts(Post_ids);
+            console.log("saved", answer);
+            if (answer === "OK") {
+                alert("Saved successfully!");
+            }
+        } else {
+            alert("Connect to internet identity");
+        }
+    } catch (error) {
+        console.log("error", error);
+    }
+}
+
+
 
   return (
     
@@ -192,7 +266,7 @@ const Profile = () => {
             className={`tab ${activeTab === 'saved' ? 'active' : ''}`}
             onClick={() => setActiveTab('saved')}
           >
-            Saved Lands
+            Requests
           </button>
         </div>
 
@@ -202,26 +276,33 @@ const Profile = () => {
               <h2>My Listings</h2>
               <button className="new-listing-btn" onClick={PostingFun}>+ New Listing</button>
             </div>
-            <div className="listings-grid">
-              {userListings.map(listing => (
+            <div className="listings-grid"> 
+              {userListings.length === 0 ?(
+                <>
+                  <center><h3>No land posts</h3></center>
+                </>
+              ) : (
+                <>
+                  {userListings.map(listing => (
                 <div key={listing.id} className="listing-card">
                   <h3>{listing.title}</h3>
                   <p className="location"><FaMapMarkerAlt />{listing.location}</p>
                   <div className="listing-stats">
-                    <span><b> Area: </b> {Number(listing.area)} acers </span>
-                    <span>|</span>
+                    <span><b> Area: </b> {Number(listing.area)}acers </span>
+                    {/* <span>|</span> */}
                     <span><b>max lease years:</b> {Number(listing.lease_years)} years</span>
                   </div>
                   <span className='location'><b>Price per year:</b>{Number(listing.price_per_year)}</span>
-                  {/* <span className='location'><b>Owner:</b>{(listing.prin).toText()}</span> */}
-                  {/* <span className='location'><b>Description:</b>{(listing.description)}</span> */}
+                  <span className='location'><b>Owner:</b>{(listing.prin).toText()}</span>
                   <span><b>Description:</b><textarea type="text" value={(listing.description)} readOnly/></span>
                   <div className="listing-actions">
-                    <button>Edit</button>
-                    <button>Save</button>
+                    {/* <button>Edit</button> */}
+                    <button onClick={() => SaveLand(listing.postid)}>Save</button>
                   </div>
                 </div>
               ))}
+                </>
+              ) }
             </div>
           </div>
         )}
@@ -242,9 +323,28 @@ const Profile = () => {
             </div>
           </div>
         )}
+
+        {/* {activeTab === 'saved' && (
+          <div className="lease-history">
+            <h2>Saved Land</h2>
+            <div className="lease-grid">
+              {leaseHistory.map(lease => (
+                <div key={lease.id} className="lease-card">
+                  <h3>{lease.landTitle}</h3>
+                  <p>Owner: {lease.owner}</p>
+                  <p>Start Date: {lease.startDate}</p>
+                  <p>End Date: {lease.endDate}</p>
+                  <span className={`status ${lease.status}`}>{lease.status}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        )} */}
       </div>
       </>
       )}
+
+
     </motion.div>
   );
 };
